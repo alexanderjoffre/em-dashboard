@@ -19,10 +19,10 @@ interface flatDataRecord {
 }
 
 const colors = {
-    zeroToOne: "#01e274",
-    twoToThree: "#e2b101",
-    fourToSeven: "#e26e01",
-    moreThanSeven: "#e21801",
+    zeroToOne: "oklch(62.7% 0.194 149.214)",    // bg-green-600
+    twoToThree: "oklch(82.8% 0.189 84.429)",    // bg-amber-400
+    fourToSeven: "oklch(47.3% 0.137 46.201)",   // bg-amber-700
+    moreThanSeven: "oklch(50.5% 0.213 27.518)", // bg-red-800
 }
 
 export const OpenPullRequestByAge = ({ data }: OpenPullRequestByAgeProps) => {
@@ -91,7 +91,7 @@ export const OpenPullRequestByAge = ({ data }: OpenPullRequestByAgeProps) => {
     const chartConfig = {} satisfies ChartConfig
 
     return (
-        <Card>
+        <Card className="min-h-full flex flex-col justify-between">
             <CardHeader>
                 <div className="flex items-center gap-2 justify-between">
                     <CardTitle className="text-2xl">Pull Request by Age</CardTitle>
@@ -154,22 +154,25 @@ const ChartCustomTooltipContent = ({ active, payload }: any) => {
                     {data.age} ago: {data.count} PR
                 </h4>
             </div>
-            <div>
-                <ul className="flex flex-col gap-2 font-bold">
-                    <li className="flex justify-between gap-4">
-                        <strong>Small:</strong> {data.breakdown.small}
-                    </li>
-                    <li className="flex justify-between gap-4">
-                        <strong>Medium:</strong> {data.breakdown.medium}
-                    </li>
-                    <li className="flex justify-between gap-4">
-                        <strong>Large:</strong> {data.breakdown.large}
-                    </li>
-                    <li className="flex justify-between gap-4">
-                        <strong>Extra Large:</strong> {data.breakdown.extraLarge}
-                    </li>
-                </ul>
-            </div>
+            {!!data.count ?
+                <div>
+                    <ul className="flex flex-col gap-2 font-bold">
+                        <li className="flex justify-between gap-4">
+                            <strong>Small:</strong> {data.breakdown.small}
+                        </li>
+                        <li className="flex justify-between gap-4">
+                            <strong>Medium:</strong> {data.breakdown.medium}
+                        </li>
+                        <li className="flex justify-between gap-4">
+                            <strong>Large:</strong> {data.breakdown.large}
+                        </li>
+                        <li className="flex justify-between gap-4">
+                            <strong>Extra Large:</strong> {data.breakdown.extraLarge}
+                        </li>
+                    </ul>
+                </div>
+                : <strong>No PRs</strong>
+            }
         </div>
     )
 }
@@ -203,7 +206,7 @@ const MetricTooltip = () => {
 
 const MetricLegends = () => {
     return (
-        <div className="flex py-4 justify-end">
+        <div className="flex py-4">
             <div className="flex gap-8">
                 <div className="flex items-center gap-2">
                     <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: colors.zeroToOne }}></span>

@@ -124,12 +124,12 @@
         {
             "id": "PR_kwDOGLCm2M7OIVC6",
             "title": "chore: [NO-TKT] backport from main",
-            "state": "OPEN",
+            "state": "MERGED",
             "url": "https://github.com/DUNA-E-Commmerce/ema/pull/2380",
             "createdAt": "2026-03-27T18:34:12Z",
             "updatedAt": "2026-03-27T18:34:13Z",
-            "closedAt": null,
-            "mergedAt": null,
+            "closedAt": "2026-03-27T18:34:13Z",
+            "mergedAt": "2026-03-27T18:34:13Z",
             "author": {
                 "login": "fcr-deuna",
                 "avatarUrl": "https://avatars.githubusercontent.com/u/201159228?u=96bb059a4524d243287c7c2ae2ab55803675d77c&v=4"
@@ -332,12 +332,12 @@
         {
             "id": "PR_kwDOGLCm2M7JhMSy",
             "title": "chore(deps): bump github.com/DUNA-E-Commmerce/go.d-una.org/aws from 1.1.0 to 1.4.0 in /lambdas/payment-sync",
-            "state": "OPEN",
+            "state": "MERGED",
             "url": "https://github.com/DUNA-E-Commmerce/ema/pull/2348",
             "createdAt": "2026-03-10T21:58:34Z",
             "updatedAt": "2026-04-02T02:15:58Z",
-            "closedAt": null,
-            "mergedAt": null,
+            "closedAt": "2026-04-02T02:15:58Z",
+            "mergedAt": "2026-04-02T02:15:58Z",
             "author": {
                 "login": "dependabot",
                 "avatarUrl": "https://avatars.githubusercontent.com/in/29110?v=4"

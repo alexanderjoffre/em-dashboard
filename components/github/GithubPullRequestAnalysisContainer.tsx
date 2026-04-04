@@ -5,6 +5,12 @@ import { Suspense } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { OpenPullRequestByAge } from "./charts/OpenPullRequestByAge";
 import { OpenPullRequestCount } from "./charts/OpenPullRequestCount";
+import { TimeToFirstReviewOnPR } from "./charts/TimeToFirstReviewOnPR";
+import { NotReviewedPullRequestCount } from "./charts/NotReviewedPullRequestCount";
+import { BlockedPullRequestCount } from "./charts/BlockedPullRequestCount";
+import { P50TimeToFirstReview } from "./charts/P50TimeToFirstReview";
+import { MostCommonPRSize } from "./charts/MostCommonPRSize";
+import { PullReuqestWithoutTicketCount } from "./charts/PullReuqestWithoutTicketCount";
 
 export const GithubPullRequestAnalysisContainer = () => {
     return (
@@ -30,23 +36,26 @@ const GithubOpenPullRequestListContent = () => {
                 <OpenPullRequestCount data={githubOpenPullRequests} />
             </div>
             <div className="col-span-2">
-                <OpenPullRequestCount data={githubOpenPullRequests} />
+                <NotReviewedPullRequestCount data={githubOpenPullRequests} />
             </div>
             <div className="col-span-2">
-                <OpenPullRequestCount data={githubOpenPullRequests} />
+                <BlockedPullRequestCount data={githubOpenPullRequests} />
             </div>
             <div className="col-span-2">
-                <OpenPullRequestCount data={githubOpenPullRequests} />
+                <P50TimeToFirstReview data={githubOpenPullRequests} />
             </div>
             <div className="col-span-2">
-                <OpenPullRequestCount data={githubOpenPullRequests} />
+                <MostCommonPRSize data={githubOpenPullRequests} />
             </div>
             <div className="col-span-2">
-                <OpenPullRequestCount data={githubOpenPullRequests} />
+                <PullReuqestWithoutTicketCount data={githubOpenPullRequests} />
             </div>
 
             <div className="col-span-4">
                 <OpenPullRequestByAge data={githubOpenPullRequests} />
+            </div>
+            <div className="col-span-4">
+                <TimeToFirstReviewOnPR data={githubOpenPullRequests} />
             </div>
             <pre className="col-span-12">
                 {JSON.stringify(githubOpenPullRequests, null, 2)}

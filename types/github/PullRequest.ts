@@ -6,6 +6,7 @@ import { Comments } from "./Comments";
 import { Commits } from "./Commits";
 import { PullRequestSize } from "./PullResquestSize";
 import { Reviews } from "./Reviews";
+import { GithubStatusCheckState } from "./PullRequestStatusCheckState";
 
 dayjs.extend(utc);
 dayjs.extend(isSameOrBefore);
@@ -26,8 +27,10 @@ export class PullRequest {
     private commits: Commits;
     private reviews: Reviews;
     private comments: Comments
-    private statusCheckRollup: { state: string } | null;
+    private statusCheckRollup: { state: GithubStatusCheckState } | null;
     private age: number;
+    private timeToFirstReviewMin: number | null;
+    private jiraTicket: string | null;
 
     constructor(data: {
         id: string;
@@ -45,7 +48,7 @@ export class PullRequest {
         commits: Commits;
         reviews: Reviews;
         comments: Comments;
-        statusCheckRollup: { state: string } | null;
+        statusCheckRollup: { state: GithubStatusCheckState } | null;
     }) {
         this.id = data.id;
         this.title = data.title;
@@ -64,6 +67,8 @@ export class PullRequest {
         this.comments = data.comments;
         this.statusCheckRollup = data.statusCheckRollup;
         this.age = this.calculateAge();
+        this.timeToFirstReviewMin = this.calculateTimeToFirstReviewMin();
+        this.jiraTicket = this.extractJiraTicket(this.title);
     }
 
     /** ========================================================== */
@@ -91,8 +96,39 @@ export class PullRequest {
         return Math.max(daysCount - 1, 0);
     }
 
-    public getSize(): string {
-        const size = this.additions + this.deletions;
+    private calculateTimeToFirstReviewMin(): number | null {
+        if (!this.reviews || this.reviews.getTotalCount() === 0) {
+            return null;
+        }
+
+        const nodes = this.reviews.getNodes();
+        if (!nodes || nodes.length === 0) {
+            return null;
+        }
+
+        const validReviews = nodes.filter(r => r.getSubmittedAt());
+        if (validReviews.length === 0) {
+            return null;
+        }
+
+        const sortedReviews = validReviews.sort((a, b) => {
+            return dayjs.utc(a.getSubmittedAt()!).diff(dayjs.utc(b.getSubmittedAt()!));
+        });
+
+        const firstReview = sortedReviews[0];
+        const createdAt = dayjs.utc(this.createdAt);
+        const firstReviewAt = dayjs.utc(firstReview.getSubmittedAt()!);
+
+        return firstReviewAt.diff(createdAt, 'minute');
+    }
+
+    private extractJiraTicket(title: string): string | null {
+        const match = title.match(/\[([a-zA-Z]{2,6}-[1-9]\d*)\]/);
+        return match ? match[1] : null;
+    }
+
+    public getSize(sizeToEvaluate?: number): PullRequestSize {
+        const size = sizeToEvaluate ?? this.getChangedLines();
 
         if (size < 200) {
             return PullRequestSize.SMALL;
@@ -153,12 +189,20 @@ export class PullRequest {
         return this.deletions;
     }
 
+    public getChangedLines(): number {
+        return this.additions + this.deletions;
+    }
+
     public getChangedFiles(): number {
         return this.changedFiles;
     }
 
     public getCommits(): Commits {
         return this.commits;
+    }
+
+    public hasReviews(): boolean {
+        return this.reviews.getTotalCount() > 0 && this.reviews.getNodes().length > 0;
     }
 
     public getReviews(): Reviews {
@@ -169,11 +213,34 @@ export class PullRequest {
         return this.comments;
     }
 
-    public getStatusCheckRollup(): { state: string } | null {
-        return this.statusCheckRollup;
+    public getStatusCheckRollup(): GithubStatusCheckState | null {
+        return this.statusCheckRollup?.state ?? null;
+    }
+
+    public isBlocked(): boolean {
+        return this.getStatusCheckRollup() === GithubStatusCheckState.FAILURE;
     }
 
     public getAge(): number {
         return this.age;
+    }
+
+    public getTimeToFirstReviewMin(): number | null {
+        return this.timeToFirstReviewMin;
+    }
+
+    public getJiraTicket(): string | null {
+        return this.jiraTicket;
+    }
+
+    public getJiraTicketUrl(): string | null {
+        if (!this.jiraTicket) {
+            return null;
+        }
+        return `https://${process.env.NEXT_PUBLIC_JIRA_ACCOUNT_NAME}.atlassian.net/browse/${this.jiraTicket}`;
+    }
+
+    public hasJiraTicket(): boolean {
+        return this.jiraTicket !== null;
     }
 }
