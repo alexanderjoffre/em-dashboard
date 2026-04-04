@@ -12,7 +12,7 @@ export const OpenPullRequestCount = ({ data }: OpenPullRequestCountProps) => {
     }, 0);
 
     return (
-        <Card>
+        <Card className="min-h-full flex flex-col justify-between">
             <CardHeader>
                 <div className="flex items-center gap-2 justify-between">
                     <h4 className="text-lg font-semibold text-slate-400">Open Pull Requests</h4>
@@ -20,9 +20,15 @@ export const OpenPullRequestCount = ({ data }: OpenPullRequestCountProps) => {
                 </div>
             </CardHeader>
             <CardContent>
-                <span className="text-4xl font-bold text-slate-200">
-                    {pullRequestCount}
-                </span>
+                <div className="flex items-end gap-2">
+                    <span className="text-4xl font-bold text-slate-200">
+                        {pullRequestCount}
+                    </span>
+                    <span className="text-2xl text-slate-400">/</span>
+                    <span className="text-2xl text-slate-400">
+                        {data.length} repos
+                    </span>
+                </div>
             </CardContent>
         </Card>
     );

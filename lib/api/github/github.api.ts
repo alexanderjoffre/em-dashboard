@@ -6,61 +6,80 @@ import { ReviewNode } from "@/types/github/ReviewNode";
 import { Commits } from "@/types/github/Commits";
 import { Comments } from "@/types/github/Comments";
 import { Reviews } from "@/types/github/Reviews";
-import repositoryMock from "./mock/repository.mock.json";
+import repositoriesMock from "./mock/repository.mock.json";
 
 const GITHUB_API_URL = "https://api.github.com/graphql";
 const REPOSITORY_OWNER = process.env.GH_REPOSITORIES_OWNER || "";
 const flagUseMock = true;
 
-export const getAllGithubOpenPullRequests = async (
-    repositoryName: string
-): Promise<Repository[]> => {
+export const getAllGithubOpenPullRequests = async (): Promise<Repository[]> => {
     let data;
 
     if (flagUseMock) {
-        data = repositoryMock;
+        data = repositoriesMock;
     } else {
-        const response = await githubFetch(GET_REPOSITORIES_GRAPHQL_QUERY, {
-            owner: REPOSITORY_OWNER,
-            name: repositoryName,
-            cursor: null,
-        });
-        data = response.repository;
+        const repositories = process.env.GH_REPOSITORIES_TO_ANALYZE?.split(',').map(r => r.trim()) || [];
+        const responses = await Promise.all(
+            repositories.map(repositoryName =>
+                githubFetch(GET_REPOSITORIES_GRAPHQL_QUERY, {
+                    owner: REPOSITORY_OWNER,
+                    name: repositoryName,
+                    cursor: null,
+                })
+            )
+        );
+        data = responses.filter(r => r && r.repository).map(r => r.repository);
+
+        try {
+            const fs = require('fs');
+            const path = require('path');
+            const mockPath = path.join(process.cwd(), 'lib/api/github/mock/repository.mock.json');
+            fs.writeFileSync(mockPath, JSON.stringify(data, null, 4), 'utf-8');
+            console.log("Mock actualizado satisfactoriamente ✨");
+        } catch (err) {
+            console.error("No se pudo escribir el archivo mock", err);
+        }
     }
 
-    const repositoryData: Repository = new Repository(
-        data.name,
-        data.pullRequests.map((pr: any) => new PullRequest({
-            id: pr.id,
-            title: pr.title,
-            state: pr.state,
-            url: pr.url,
-            createdAt: pr.createdAt,
-            updatedAt: pr.updatedAt,
-            closedAt: pr.closedAt,
-            mergedAt: pr.mergedAt,
-            author: new Author(pr.author.login, pr.author.avatarUrl),
-            additions: pr.additions,
-            deletions: pr.deletions,
-            changedFiles: pr.changedFiles,
-            commits: new Commits(pr.commits.totalCount),
-            reviews: new Reviews(
-                pr.reviews.totalCount,
-                pr.reviews.nodes.map((review: any) => new ReviewNode(
-                    review.state,
-                    review.submittedAt,
-                    new Author(review.author.login, review.author.avatarUrl)
-                ))
-            ),
-            comments: new Comments(pr.comments.totalCount),
-            statusCheckRollup: pr.statusCheckRollup,
-        }))
-    )
+    const repositoriesData: Repository[] = data.map((repo: any) => {
+        const prList: any[] = Array.isArray(repo.pullRequests)
+            ? repo.pullRequests
+            : (repo.pullRequests.nodes || []);
 
-    return [repositoryData];
+        return new Repository(
+            repo.name,
+            prList.map((pr: any) => new PullRequest({
+                id: pr.id,
+                title: pr.title,
+                state: pr.state,
+                url: pr.url,
+                createdAt: pr.createdAt,
+                updatedAt: pr.updatedAt,
+                closedAt: pr.closedAt,
+                mergedAt: pr.mergedAt,
+                author: new Author(pr.author.login, pr.author.avatarUrl),
+                additions: pr.additions,
+                deletions: pr.deletions,
+                changedFiles: pr.changedFiles,
+                commits: new Commits(pr.commits.totalCount),
+                reviews: new Reviews(
+                    pr.reviews.totalCount,
+                    pr.reviews.nodes.map((review: any) => new ReviewNode(
+                        review.state,
+                        review.submittedAt,
+                        new Author(review.author.login, review.author.avatarUrl)
+                    ))
+                ),
+                comments: new Comments(pr.comments.totalCount),
+                statusCheckRollup: pr.statusCheckRollup,
+            }))
+        );
+    });
+
+    return repositoriesData;
 }
 
-export async function githubFetch(query: string, variables?: any): Promise<any> {
+async function githubFetch(query: string, variables?: any): Promise<any> {
     await new Promise(resolve => setTimeout(resolve, 3000));
     const res = await fetch(GITHUB_API_URL, {
         method: "POST",

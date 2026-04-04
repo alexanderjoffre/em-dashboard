@@ -43,14 +43,20 @@ export const P50TimeToFirstReview = ({ data }: P50TimeToFirstReviewProps) => {
             <CardContent>
                 <div className="flex items-end gap-2">
                     <span className={`text-4xl font-bold ${cardColorTheme.textPrimaryColor}`}>
-                        {
-                            p50TimeToFirstReviewInHours < 24
+                        {p50TimeToFirstReviewInHours < 1
+                            ? p50TimeToFirstReview.toFixed(0)
+                            : p50TimeToFirstReviewInHours < 24
                                 ? p50TimeToFirstReviewInHours.toFixed(0)
                                 : (p50TimeToFirstReviewInHours / 24).toFixed(0)
                         }
                     </span>
                     <span className={`text-2xl ${cardColorTheme.textSecondaryColor}`}>
-                        {p50TimeToFirstReviewInHours < 24 ? "hours" : "days"}
+                        {p50TimeToFirstReviewInHours < 1
+                            ? "minutes"
+                            : p50TimeToFirstReviewInHours < 24
+                                ? "hours"
+                                : "days"
+                        }
                     </span>
                 </div>
             </CardContent>

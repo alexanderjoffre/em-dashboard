@@ -4,8 +4,8 @@ query GetRepoPRMetrics($owner: String!, $name: String!) {
     name
     
     pullRequests(
-      first: 20,
-      states: [OPEN],
+      first: 50,
+      states: [OPEN, MERGED],
       orderBy: {field: CREATED_AT, direction: DESC}
     ) {
       nodes {

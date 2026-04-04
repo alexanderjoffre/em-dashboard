@@ -1,11 +1,11 @@
 "use client";
 
-import { useGithubOpenPullRequests } from "@/hooks/api/useGithubOpenPullRequests";
+import { useGithubPullRequests } from "@/hooks/api/useGithubOpenPullRequests";
 import { Suspense } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { OpenPullRequestByAge } from "./charts/OpenPullRequestByAge";
 import { OpenPullRequestCount } from "./charts/OpenPullRequestCount";
-import { TimeToFirstReviewOnPR } from "./charts/TimeToFirstReviewOnPR";
+import { MatrixPRSizeVsTTFR } from "./charts/MatrixPRSizeVsTTFR";
 import { NotReviewedPullRequestCount } from "./charts/NotReviewedPullRequestCount";
 import { BlockedPullRequestCount } from "./charts/BlockedPullRequestCount";
 import { P50TimeToFirstReview } from "./charts/P50TimeToFirstReview";
@@ -15,16 +15,16 @@ import { PullReuqestWithoutTicketCount } from "./charts/PullReuqestWithoutTicket
 export const GithubPullRequestAnalysisContainer = () => {
     return (
         <Suspense fallback={<Loading />}>
-            <GithubOpenPullRequestListContent />
+            <GithubPullRequestListContent />
         </Suspense>
     );
 }
 
-const GithubOpenPullRequestListContent = () => {
+const GithubPullRequestListContent = () => {
     const {
-        data: githubOpenPullRequests,
+        data: githubPullRequests,
         error
-    } = useGithubOpenPullRequests();
+    } = useGithubPullRequests();
 
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -33,33 +33,33 @@ const GithubOpenPullRequestListContent = () => {
     return (
         <div className="grid grid-cols-12 gap-4">
             <div className="col-span-2">
-                <OpenPullRequestCount data={githubOpenPullRequests} />
+                <OpenPullRequestCount data={githubPullRequests} />
             </div>
             <div className="col-span-2">
-                <NotReviewedPullRequestCount data={githubOpenPullRequests} />
+                <NotReviewedPullRequestCount data={githubPullRequests} />
             </div>
             <div className="col-span-2">
-                <BlockedPullRequestCount data={githubOpenPullRequests} />
+                <BlockedPullRequestCount data={githubPullRequests} />
             </div>
             <div className="col-span-2">
-                <P50TimeToFirstReview data={githubOpenPullRequests} />
+                <P50TimeToFirstReview data={githubPullRequests} />
             </div>
             <div className="col-span-2">
-                <MostCommonPRSize data={githubOpenPullRequests} />
+                <MostCommonPRSize data={githubPullRequests} />
             </div>
             <div className="col-span-2">
-                <PullReuqestWithoutTicketCount data={githubOpenPullRequests} />
+                <PullReuqestWithoutTicketCount data={githubPullRequests} />
             </div>
 
             <div className="col-span-4">
-                <OpenPullRequestByAge data={githubOpenPullRequests} />
+                <OpenPullRequestByAge data={githubPullRequests} />
             </div>
-            <div className="col-span-4">
-                <TimeToFirstReviewOnPR data={githubOpenPullRequests} />
+            <div className="col-span-8">
+                <MatrixPRSizeVsTTFR data={githubPullRequests} />
             </div>
-            <pre className="col-span-12">
-                {JSON.stringify(githubOpenPullRequests, null, 2)}
-            </pre>
+            {/* <pre className="col-span-12">
+                {JSON.stringify(githubPullRequests, null, 2)}
+            </pre> */}
         </div>
     );
 }

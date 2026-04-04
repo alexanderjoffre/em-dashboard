@@ -13,11 +13,11 @@ const getBaseUrl = () => {
     return `http://localhost:${process.env.PORT ?? 3000}`;
 };
 
-export const useGithubOpenPullRequests = () => {
+export const useGithubPullRequests = () => {
     return useSuspenseQuery({
-        queryKey: ["github-open-pull-requests"],
+        queryKey: ["github-pull-requests"],
         queryFn: async (): Promise<Repository[]> => {
-            const res = await fetch(`${getBaseUrl()}/api/github/pull-requests?repository=ema`);
+            const res = await fetch(`${getBaseUrl()}/api/github/pull-requests`);
             if (!res.ok) {
                 throw new Error("Failed to fetch pull requests");
             }
