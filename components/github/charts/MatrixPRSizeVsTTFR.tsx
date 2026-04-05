@@ -1,14 +1,24 @@
+"use client";
+
+import { useState } from "react";
 import { InfoTooltip } from "@/components/shared/InfoTooltip";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { Repository } from "@/types/github/Repository";
 import { PullRequestSize } from "@/types/github/PullResquestSize";
-
 interface MatrixPRSizeVsTTFRProps {
     data: Repository[];
 }
 
 type SizeStats = { p50: number, p90: number, count: number };
 type PRSizeMatrix = Record<string, SizeStats>;
+
+const formatTime = (minutes: number) => {
+    const days = Number((minutes / 1440).toFixed(0));
+
+    if (minutes < 60) return `${(minutes).toFixed(0)}m`; // less than an hour
+    if (days < 1) return `${(minutes / 60).toFixed(0)}h`; // less than a day
+    return `${Number(days.toFixed(1))}d`; // 1 day or more
+};
 
 export const MatrixPRSizeVsTTFR = ({ data }: MatrixPRSizeVsTTFRProps) => {
     const { matrix, maxReviewTime } = calculatePRSizeMatrix(data);
@@ -29,13 +39,16 @@ export const MatrixPRSizeVsTTFR = ({ data }: MatrixPRSizeVsTTFRProps) => {
                     </h4>
                     <MetricTooltip />
                 </div>
+                <CardDescription>
+                    <MetricLegends />
+                </CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-12 gap-4">
                     <div className="col-span-10 col-start-3">
                         <div className="flex items-center gap-2 justify-between">
-                            <span>0d</span>
-                            <span>{maxReviewTime}d</span>
+                            <span className="text-sm text-slate-400">0d</span>
+                            <span className="text-sm text-slate-400">{formatTime(maxReviewTime)}</span>
                         </div>
                     </div>
 
@@ -44,18 +57,16 @@ export const MatrixPRSizeVsTTFR = ({ data }: MatrixPRSizeVsTTFRProps) => {
 
                         return (
                             <div key={key} className="contents">
-                                <span className="col-span-1">{label}</span>
+                                <span className="col-span-3">{label}</span>
                                 {stats.count > 0 ? (
-                                    <>
-                                        <span className="col-span-1">{stats.count} PR</span>
-                                        <div className="col-span-10 flex items-center h-full pt-1">
-                                            <HorizontalBar
-                                                p50Value={matrix[key]?.p50 || 0}
-                                                p90Value={matrix[key]?.p90 || 0}
-                                                max={maxReviewTime}
-                                            />
-                                        </div>
-                                    </>
+                                    <div className="col-span-9 flex items-center h-full pt-1">
+                                        <HorizontalBar
+                                            p50Value={matrix[key]?.p50 || 0}
+                                            p90Value={matrix[key]?.p90 || 0}
+                                            max={maxReviewTime}
+                                            sizeLabel={label}
+                                        />
+                                    </div>
                                 ) : (
                                     <span className="text-slate-400 col-span-11">All PRs in this category have no reviews yet</span>
                                 )}
@@ -68,24 +79,60 @@ export const MatrixPRSizeVsTTFR = ({ data }: MatrixPRSizeVsTTFRProps) => {
     );
 }
 
-const HorizontalBar = ({ p50Value, p90Value, max }: { p50Value: number, p90Value: number, max: number }) => {
-    const Point = ({ value }: { value: number }) => (
-        <div className="
+const HorizontalBar = ({ p50Value, p90Value, max, sizeLabel }: { p50Value: number, p90Value: number, max: number, sizeLabel: string }) => {
+    const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null);
+
+    const Point = ({ value, color }: { value: number, color: string }) => (
+        <div className={`
             h-4 w-4 
             absolute top-1/2 -translate-y-1/2 -translate-x-1/2
             rounded-full 
-            bg-blue-500 border-2 border-slate-300 
-        " style={{
+            ${color} border-2 border-slate-300 
+        `} style={{
                 left: `${value / max * 100}%`,
             }}></div>
     )
 
     return (
-        <div className="h-2 bg-slate-600 rounded-md relative flex-grow w-full">
-            <Point value={p50Value} />
-            <Point value={p90Value} />
+        <div
+            className="h-2 bg-slate-600 hover:bg-slate-500 transition-colors rounded-md relative flex-grow w-full cursor-crosshair"
+            onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
+            onMouseLeave={() => setMousePos(null)}
+        >
+            <Point value={p50Value} color="bg-blue-500" />
+            <Point value={p90Value} color="bg-green-600" />
+
+            {mousePos && (
+                <div
+                    className="fixed z-[1000] p-3 text-sm grid gap-1 bg-slate-800 text-slate-300 border-slate-700 border rounded-md shadow-md pointer-events-none"
+                    style={{ left: mousePos.x + 15, top: mousePos.y + 15 }}
+                >
+                    <span className="font-extrabold text-white text-center pb-1 mb-1 border-b border-slate-600">{sizeLabel}</span>
+                    <div className="flex flex-col">
+                        <span>P50: {formatTime(p50Value)}</span>
+                        <span>P90: {formatTime(p90Value)}</span>
+                    </div>
+                </div>
+            )}
         </div>
     );
+}
+
+const MetricLegends = () => {
+    return (
+        <div className="flex py-4">
+            <div className="flex gap-8">
+                <div className="flex items-center gap-2">
+                    <span className="w-4 h-4 rounded-full inline-block bg-blue-500 border-2 border-slate-300"></span>
+                    <span className="text-sm">P50</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="w-4 h-4 rounded-full inline-block bg-green-600 border-2 border-slate-300"></span>
+                    <span className="text-sm">P90</span>
+                </div>
+            </div>
+        </div>
+    )
 }
 
 const MetricTooltip = () => {
@@ -117,8 +164,8 @@ const calculatePRSizeMatrix = (data: Repository[]): { matrix: PRSizeMatrix, maxR
             const ttfrMinutes = pr.getTimeToFirstReviewMin();
 
             if (ttfrMinutes !== null) {
-                const days = Number((ttfrMinutes / 1440).toFixed(2));
-                buckets[pr.getSize()].push(days);
+                const days = Number((ttfrMinutes / 1440).toFixed(0));
+                buckets[pr.getSize()].push(ttfrMinutes);
                 if (days > globalMax) globalMax = days;
             }
         }
@@ -130,13 +177,20 @@ const calculatePRSizeMatrix = (data: Repository[]): { matrix: PRSizeMatrix, maxR
         return arr[index] || 0;
     };
 
+    let maxP90 = 0;
+
     const matrix = Object.keys(buckets).reduce((acc, size) => {
         const values = buckets[size];
         if (values.length > 0) {
             values.sort((a, b) => a - b);
+            const p50 = calcPercentile(values, 50);
+            const p90 = calcPercentile(values, 90);
+
+            if (p90 > maxP90) maxP90 = p90;
+
             acc[size] = {
-                p50: calcPercentile(values, 50),
-                p90: calcPercentile(values, 90),
+                p50,
+                p90,
                 count: values.length,
             };
         } else {
@@ -145,5 +199,13 @@ const calculatePRSizeMatrix = (data: Repository[]): { matrix: PRSizeMatrix, maxR
         return acc;
     }, {} as PRSizeMatrix);
 
-    return { matrix, maxReviewTime: globalMax > 0 ? Math.ceil(globalMax) : 1 };
+    let adjustedMax = maxP90 * 1.1; // Add 10% padding so the p90 dot isn't exactly hugging the right border
+    if (adjustedMax > 0 && adjustedMax < 1) {
+        adjustedMax = Number(adjustedMax.toFixed(2));
+        if (adjustedMax === 0) adjustedMax = 0.05;
+    } else {
+        adjustedMax = Math.ceil(adjustedMax);
+    }
+
+    return { matrix, maxReviewTime: adjustedMax };
 }

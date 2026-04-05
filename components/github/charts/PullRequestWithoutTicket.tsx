@@ -2,24 +2,28 @@ import { InfoTooltip } from "@/components/shared/InfoTooltip";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Repository } from "@/types/github/Repository";
 import { getMetricCardTheme } from "@/lib/utils/metricCardTheme";
+import { PullRequest } from "@/types/github/PullRequest";
 
-interface PullReuqestWithoutTicketCountProps {
+interface PullRequestWithoutTicketProps {
     data: Repository[];
 }
 
-export const PullReuqestWithoutTicketCount = ({ data }: PullReuqestWithoutTicketCountProps) => {
+export const PullRequestWithoutTicket = ({ data }: PullRequestWithoutTicketProps) => {
     const percentageThresholds = {
         alert: 10,
         critical: 20,
     };
 
+    const prsWithoutTicket: PullRequest[] = [];
     let totalPR: number = 0;
     let prWithoutTicket: number = 0;
 
     data.forEach((repo) => {
         totalPR += repo.getOpenPullRequests().length;
-        prWithoutTicket += repo.getOpenPullRequests().filter((pr) => pr.hasJiraTicket()).length;
+        prsWithoutTicket.push(...repo.getOpenPullRequests().filter((pr) => !pr.hasJiraTicket()));
     });
+
+    prWithoutTicket = prsWithoutTicket.length;
 
     const prWithoutTicketPercentage = ((prWithoutTicket / totalPR) * 100);
 
@@ -40,6 +44,13 @@ export const PullReuqestWithoutTicketCount = ({ data }: PullReuqestWithoutTicket
                     </span>
                     <span className={`text-2xl ${cardColorTheme.textSecondaryColor}`}>/</span>
                     <span className={`text-2xl ${cardColorTheme.textSecondaryColor}`}>{prWithoutTicketPercentage.toFixed(1)}%</span>
+                </div>
+                <div className="grid gap-2">
+                    {prsWithoutTicket.map((pr) => (
+                        <a className="flex" href={pr.getUrl()} target="_blank">
+                            <span>{pr.getUrl()}</span>
+                        </a>
+                    ))}
                 </div>
             </CardContent>
         </Card>

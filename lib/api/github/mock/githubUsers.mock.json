@@ -4,41 +4,55 @@
         "name": "Alexander Joffre",
         "title": "Engineering Manager",
         "pod": "Payment Platform",
-        "team": null
+        "team": null,
+        "active": true
     },
     {
         "username": "lpereira-deuna",
         "name": "Leonardo De Macedo",
         "title": "Staff Engineer",
         "pod": "Payment Platform",
-        "team": null
+        "team": null,
+        "active": true
     },
     {
         "username": "dlora-deuna",
         "name": "Diego Lora",
         "title": "Senior Software Engineer",
         "pod": "Payment Platform",
-        "team": "Marketplace"
+        "team": "Marketplace",
+        "active": true
     },
     {
         "username": "renxzen",
         "name": "Renzo Mondragón",
         "title": "Mid Software Engineer",
         "pod": "Payment Platform",
-        "team": "Marketplace"
+        "team": "Marketplace",
+        "active": true
     },
     {
         "username": "fcr-deuna",
         "name": "Fernando Cisneros",
         "title": "Mid Software Engineer",
         "pod": "Payment Platform",
-        "team": "Marketplace"
+        "team": "Marketplace",
+        "active": true
     },
     {
         "username": "josegodoineto",
         "name": "Jose Neto",
         "title": "Senior Software Engineer",
         "pod": "Payment Platform",
-        "team": "Marketplace"
+        "team": "Marketplace",
+        "active": false
+    },
+    {
+        "username": "josegodoineto",
+        "name": "Jose Neto",
+        "title": "Senior Software Engineer",
+        "pod": "Payment Platform",
+        "team": "Marketplace",
+        "active": false
     }
 ]

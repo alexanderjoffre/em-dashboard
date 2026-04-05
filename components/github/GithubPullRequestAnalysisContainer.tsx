@@ -10,7 +10,8 @@ import { NotReviewedPullRequestCount } from "./charts/NotReviewedPullRequestCoun
 import { BlockedPullRequestCount } from "./charts/BlockedPullRequestCount";
 import { P50TimeToFirstReview } from "./charts/P50TimeToFirstReview";
 import { MostCommonPRSize } from "./charts/MostCommonPRSize";
-import { PullReuqestWithoutTicketCount } from "./charts/PullReuqestWithoutTicketCount";
+import { PullRequestWithoutTicket } from "./charts/PullRequestWithoutTicket";
+import { PullRequestBySize } from "./charts/PullRequestBySize";
 
 export const GithubPullRequestAnalysisContainer = () => {
     return (
@@ -47,19 +48,19 @@ const GithubPullRequestListContent = () => {
             <div className="col-span-2">
                 <MostCommonPRSize data={githubPullRequests} />
             </div>
-            <div className="col-span-2">
-                <PullReuqestWithoutTicketCount data={githubPullRequests} />
-            </div>
 
             <div className="col-span-4">
                 <OpenPullRequestByAge data={githubPullRequests} />
             </div>
-            <div className="col-span-8">
-                <MatrixPRSizeVsTTFR data={githubPullRequests} />
+            <div className="col-span-4">
+                <PullRequestBySize data={githubPullRequests} />
             </div>
-            {/* <pre className="col-span-12">
-                {JSON.stringify(githubPullRequests, null, 2)}
-            </pre> */}
+            <div className="col-span-4">
+                <div className="grid gap-4">
+                    <MatrixPRSizeVsTTFR data={githubPullRequests} />
+                    <PullRequestWithoutTicket data={githubPullRequests} />
+                </div>
+            </div>
         </div>
     );
 }
