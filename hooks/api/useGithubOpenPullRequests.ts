@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Repository } from "@/types/github/Repository";
 import { PullRequest } from "@/types/github/PullRequest";
-import { Author } from "@/types/github/Author";
+import { GithubUser } from "@/types/github/GithubUser";
 import { Commits } from "@/types/github/Commits";
 import { Reviews } from "@/types/github/Reviews";
 import { ReviewNode } from "@/types/github/ReviewNode";
@@ -36,7 +36,9 @@ export const useGithubPullRequests = () => {
                         updatedAt: pr.updatedAt,
                         closedAt: pr.closedAt,
                         mergedAt: pr.mergedAt,
-                        author: new Author(pr.author?.login, pr.author?.avatarUrl),
+                        author: new GithubUser(pr.author?.login, pr.author?.avatarUrl),
+                        targetBranchName: pr.baseRefName,
+                        sourceBranchName: pr.headRefName,
                         additions: pr.additions,
                         deletions: pr.deletions,
                         changedFiles: pr.changedFiles,
@@ -46,7 +48,7 @@ export const useGithubPullRequests = () => {
                             pr.reviews?.nodes ? pr.reviews.nodes.map((review: any) => new ReviewNode(
                                 review.state,
                                 review.submittedAt,
-                                new Author(review.author?.login, review.author?.avatarUrl)
+                                new GithubUser(review.author?.login, review.author?.avatarUrl)
                             )) : []
                         ),
                         comments: new Comments(pr.comments?.totalCount || 0),

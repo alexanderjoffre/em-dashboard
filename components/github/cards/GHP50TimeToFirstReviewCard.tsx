@@ -3,11 +3,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Repository } from "@/types/github/Repository";
 import { getMetricCardTheme } from "@/lib/utils/metricCardTheme";
 
-interface P50TimeToFirstReviewProps {
+interface GHP50TimeToFirstReviewCardProps {
     data: Repository[];
 }
 
-export const P50TimeToFirstReview = ({ data }: P50TimeToFirstReviewProps) => {
+export const GHP50TimeToFirstReviewCard = ({ data }: GHP50TimeToFirstReviewCardProps) => {
     const timeThresholds = {
         alert: 24,       // 1 day
         critical: 72,   // 3 days
@@ -36,13 +36,13 @@ export const P50TimeToFirstReview = ({ data }: P50TimeToFirstReviewProps) => {
         <Card className={`${cardColorTheme.cardBackGround} min-h-full flex flex-col justify-between`}>
             <CardHeader>
                 <div className="flex items-center gap-2 justify-between">
-                    <h4 className={`text-lg font-semibold ${cardColorTheme.textSecondaryColor}`}>P50 Time to first review</h4>
+                    <h4 className={`text-md font-semibold ${cardColorTheme.textSecondaryColor}`}>P50 Time to first review</h4>
                     <MetricTooltip />
                 </div>
             </CardHeader>
             <CardContent>
                 <div className="flex items-end gap-2">
-                    <span className={`text-4xl font-bold ${cardColorTheme.textPrimaryColor}`}>
+                    <span className={`text-3xl font-semibold ${cardColorTheme.textPrimaryColor}`}>
                         {p50TimeToFirstReviewInHours < 1
                             ? p50TimeToFirstReview.toFixed(0)
                             : p50TimeToFirstReviewInHours < 24
@@ -50,11 +50,11 @@ export const P50TimeToFirstReview = ({ data }: P50TimeToFirstReviewProps) => {
                                 : (p50TimeToFirstReviewInHours / 24).toFixed(0)
                         }
                     </span>
-                    <span className={`text-2xl ${cardColorTheme.textSecondaryColor}`}>
+                    <span className={`text-xl ${cardColorTheme.textSecondaryColor}`}>
                         {p50TimeToFirstReviewInHours < 1
-                            ? "minutes"
+                            ? "min"
                             : p50TimeToFirstReviewInHours < 24
-                                ? "hours"
+                                ? "hrs"
                                 : "days"
                         }
                     </span>
@@ -67,7 +67,7 @@ export const P50TimeToFirstReview = ({ data }: P50TimeToFirstReviewProps) => {
 const MetricTooltip = () => {
     return (
         <InfoTooltip>
-            <p className="font-extrabold">
+            <p>
                 Shows the median time (P50) it takes for the first review to be added to a pull request. It only considers pull requests that have at least one review.
             </p>
         </InfoTooltip>

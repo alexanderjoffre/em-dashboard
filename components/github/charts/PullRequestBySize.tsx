@@ -60,7 +60,7 @@ export const PullRequestBySize = ({ data }: PullRequestBySizeProps) => {
         <Card className="min-h-full flex flex-col justify-between">
             <CardHeader>
                 <div className="flex items-center gap-2 justify-between">
-                    <CardTitle className="text-2xl">Pull Request by Size</CardTitle>
+                    <CardTitle className="text-xl font-medium">PR by Size</CardTitle>
                     <MetricTooltip />
                 </div>
                 <CardDescription>
@@ -148,24 +148,24 @@ const ChartCustomTooltipContent = ({ active, payload }: any) => {
 const MetricTooltip = () => {
     return (
         <InfoTooltip>
-            <p className="mb-4 font-extrabold">
+            <p className="mb-4">
                 This chart shows the distribution of all analyzed pull requests classified by their size.
             </p>
-            <p className="mb-2 font-extrabold">
+            <p className="mb-2">
                 The breakdown by size is as follows:
             </p>
             <ul className="flex flex-col gap-1">
                 <li>
-                    <strong className="font-extrabold">Small:</strong> less than 200 lines of code
+                    <strong className="font-medium">Small:</strong> less than 200 lines of code
                 </li>
                 <li>
-                    <strong className="font-extrabold">Medium:</strong> between 200 and 500 lines of code
+                    <strong className="font-medium">Medium:</strong> between 200 and 500 lines of code
                 </li>
                 <li>
-                    <strong className="font-extrabold">Large:</strong> between 500 and 1000 lines of code
+                    <strong className="font-medium">Large:</strong> between 500 and 1000 lines of code
                 </li>
                 <li>
-                    <strong className="font-extrabold">Extra Large:</strong> more than 1000 lines of code
+                    <strong className="font-medium">Extra Large:</strong> more than 1000 lines of code
                 </li>
             </ul>
         </InfoTooltip>
@@ -176,21 +176,21 @@ const MetricLegends = () => {
     return (
         <div className="flex py-4">
             <div className="flex gap-8">
-                <span className="font-extrabold text-lg">Lines of code: </span>
+                <span className="font-bold text-md">Lines of code: </span>
                 <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: colors[PullRequestSize.SMALL] }}></span>
+                    <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: colors[PullRequestSize.SMALL] }}></span>
                     <span className="text-sm">200</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: colors[PullRequestSize.MEDIUM] }}></span>
+                    <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: colors[PullRequestSize.MEDIUM] }}></span>
                     <span className="text-sm">500</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: colors[PullRequestSize.LARGE] }}></span>
+                    <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: colors[PullRequestSize.LARGE] }}></span>
                     <span className="text-sm">1000</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: colors[PullRequestSize.EXTRA_LARGE] }}></span>
+                    <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: colors[PullRequestSize.EXTRA_LARGE] }}></span>
                     <span className="text-sm">+1000</span>
                 </div>
             </div>

@@ -55,35 +55,35 @@ export const OpenPullRequestByAge = ({ data }: OpenPullRequestByAgeProps) => {
 
     const chartData = [
         {
-            age: "1 day", fill: colors.zeroToOne,
+            age: "1d", fill: colors.zeroToOne,
             ...getPullRequestsBreakdownByCondition(flatData, (pr) => pr.age === 1),
         },
         {
-            age: "2 days", fill: colors.twoToThree,
+            age: "2d", fill: colors.twoToThree,
             ...getPullRequestsBreakdownByCondition(flatData, (pr) => pr.age === 2),
         },
         {
-            age: "3 days", fill: colors.twoToThree,
+            age: "3d", fill: colors.twoToThree,
             ...getPullRequestsBreakdownByCondition(flatData, (pr) => pr.age === 3),
         },
         {
-            age: "4 days", fill: colors.fourToSeven,
+            age: "4d", fill: colors.fourToSeven,
             ...getPullRequestsBreakdownByCondition(flatData, (pr) => pr.age === 4),
         },
         {
-            age: "5 days", fill: colors.fourToSeven,
+            age: "5d", fill: colors.fourToSeven,
             ...getPullRequestsBreakdownByCondition(flatData, (pr) => pr.age === 5),
         },
         {
-            age: "6 days", fill: colors.fourToSeven,
+            age: "6d", fill: colors.fourToSeven,
             ...getPullRequestsBreakdownByCondition(flatData, (pr) => pr.age === 6),
         },
         {
-            age: "7 days", fill: colors.fourToSeven,
+            age: "7d", fill: colors.fourToSeven,
             ...getPullRequestsBreakdownByCondition(flatData, (pr) => pr.age === 7),
         },
         {
-            age: "+7 days", fill: colors.moreThanSeven,
+            age: "+7d", fill: colors.moreThanSeven,
             ...getPullRequestsBreakdownByCondition(flatData, (pr) => pr.age > 7)
         },
     ];
@@ -94,7 +94,7 @@ export const OpenPullRequestByAge = ({ data }: OpenPullRequestByAgeProps) => {
         <Card className="min-h-full flex flex-col justify-between">
             <CardHeader>
                 <div className="flex items-center gap-2 justify-between">
-                    <CardTitle className="text-2xl">Pull Request by Age</CardTitle>
+                    <CardTitle className="text-xl font-medium">Pull Request by Age</CardTitle>
                     <MetricTooltip />
                 </div>
                 <CardDescription>
@@ -180,10 +180,10 @@ const ChartCustomTooltipContent = ({ active, payload }: any) => {
 const MetricTooltip = () => {
     return (
         <InfoTooltip>
-            <p className="mb-4 font-extrabold">
+            <p className="mb-4">
                 This chart shows the distribution of open pull requests classified by their age in business days excluding saturday and sunday.
             </p>
-            <p className="mb-2 font-extrabold">
+            <p className="mb-2">
                 The breakdown by size is as follows:
             </p>
             <ul className="flex flex-col gap-1">
@@ -209,19 +209,19 @@ const MetricLegends = () => {
         <div className="flex py-4">
             <div className="flex gap-8">
                 <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: colors.zeroToOne }}></span>
+                    <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: colors.zeroToOne }}></span>
                     <span className="text-sm">0-1 day</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: colors.twoToThree }}></span>
+                    <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: colors.twoToThree }}></span>
                     <span className="text-sm">2-3 days</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: colors.fourToSeven }}></span>
+                    <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: colors.fourToSeven }}></span>
                     <span className="text-sm">4-7 days</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: colors.moreThanSeven }}></span>
+                    <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: colors.moreThanSeven }}></span>
                     <span className="text-sm">+7 days</span>
                 </div>
             </div>

@@ -1,58 +1,93 @@
-[
-    {
-        "username": "alexanderjoffre",
+{
+    "alexanderjoffre": {
         "name": "Alexander Joffre",
         "title": "Engineering Manager",
         "pod": "Payment Platform",
         "team": null,
-        "active": true
+        "status": "active"
     },
-    {
-        "username": "lpereira-deuna",
+    "lpereira-deuna": {
         "name": "Leonardo De Macedo",
         "title": "Staff Engineer",
         "pod": "Payment Platform",
         "team": null,
-        "active": true
+        "status": "active"
     },
-    {
-        "username": "dlora-deuna",
+    "dokshor": {
+        "name": "Fabian Ramirez",
+        "title": "Technical Lead",
+        "pod": "Payment Platform",
+        "team": "Marketplace",
+        "status": "active"
+    },
+    "dlora-deuna": {
         "name": "Diego Lora",
         "title": "Senior Software Engineer",
         "pod": "Payment Platform",
         "team": "Marketplace",
-        "active": true
+        "status": "active"
     },
-    {
-        "username": "renxzen",
+    "renxzen": {
         "name": "Renzo Mondragón",
         "title": "Mid Software Engineer",
         "pod": "Payment Platform",
         "team": "Marketplace",
-        "active": true
+        "status": "active"
     },
-    {
-        "username": "fcr-deuna",
+    "rmondragon-deuna": {
+        "name": "Renzo Mondragón",
+        "title": "Mid Software Engineer",
+        "pod": "Payment Platform",
+        "team": "Marketplace",
+        "status": "active"
+    },
+    "fcr-deuna": {
         "name": "Fernando Cisneros",
         "title": "Mid Software Engineer",
         "pod": "Payment Platform",
         "team": "Marketplace",
-        "active": true
+        "status": "active"
     },
-    {
-        "username": "josegodoineto",
+    "francomidence": {
+        "name": "Franco Midence",
+        "title": "Mid Software Engineer",
+        "pod": "Payment Platform",
+        "team": "Marketplace",
+        "status": "active"
+    },
+    "zetogk": {
+        "name": "Santiago Yepes",
+        "title": "Technical Lead",
+        "pod": "Payment Platform",
+        "team": "Capabilities",
+        "status": "active"
+    },
+    "josegodoineto": {
         "name": "Jose Neto",
         "title": "Senior Software Engineer",
         "pod": "Payment Platform",
         "team": "Marketplace",
-        "active": false
+        "status": "inactive"
     },
-    {
-        "username": "josegodoineto",
-        "name": "Jose Neto",
-        "title": "Senior Software Engineer",
+    "juanse1801": {
+        "name": "Juan Salazar",
+        "title": "Mid Software Engineer",
         "pod": "Payment Platform",
         "team": "Marketplace",
-        "active": false
+        "status": "inactive"
+    },
+    "JeanRoldanDev": {
+        "name": "Jean Roldan",
+        "title": "Senior Software Engineer",
+        "pod": "Payment Integrations",
+        "team": "TBD",
+        "status": "active"
+    },
+    "ocardona5": {
+        "name": "Oscar Cardona",
+        "title": "Dev Ops Engineer",
+        "pod": "Infrastructure",
+        "team": "DevOps",
+        "status": "active"
     }
-]
+}

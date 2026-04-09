@@ -1,11 +1,11 @@
-import { Author } from "./Author";
+import { GithubUser } from "./GithubUser";
 
 export class ReviewNode {
     private state: string;
     private submittedAt?: string;
-    private author: Author;
+    private author: GithubUser;
 
-    constructor(state: string, submittedAt: string, author: Author) {
+    constructor(state: string, submittedAt: string, author: GithubUser) {
         this.state = state;
         this.submittedAt = submittedAt;
         this.author = author;
@@ -19,7 +19,7 @@ export class ReviewNode {
         return this.submittedAt;
     }
 
-    public getAuthor(): Author {
+    public getAuthor(): GithubUser {
         return this.author;
     }
 }

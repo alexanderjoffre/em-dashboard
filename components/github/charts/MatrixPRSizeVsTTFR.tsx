@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { InfoTooltip } from "@/components/shared/InfoTooltip";
-import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Repository } from "@/types/github/Repository";
 import { PullRequestSize } from "@/types/github/PullResquestSize";
 interface MatrixPRSizeVsTTFRProps {
@@ -34,9 +34,11 @@ export const MatrixPRSizeVsTTFR = ({ data }: MatrixPRSizeVsTTFRProps) => {
         <Card>
             <CardHeader>
                 <div className="flex items-center gap-2 justify-between">
-                    <h4 className="text-lg font-semibold text-slate-400">
-                        PR size vs Time to First Review
-                    </h4>
+                    <CardTitle>
+                        <h4 className="text-lg font-semibold">
+                            PR size vs Time to First Review
+                        </h4>
+                    </CardTitle>
                     <MetricTooltip />
                 </div>
                 <CardDescription>
@@ -45,7 +47,7 @@ export const MatrixPRSizeVsTTFR = ({ data }: MatrixPRSizeVsTTFRProps) => {
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-12 gap-4">
-                    <div className="col-span-10 col-start-3">
+                    <div className="col-span-9 col-start-4">
                         <div className="flex items-center gap-2 justify-between">
                             <span className="text-sm text-slate-400">0d</span>
                             <span className="text-sm text-slate-400">{formatTime(maxReviewTime)}</span>
@@ -57,7 +59,7 @@ export const MatrixPRSizeVsTTFR = ({ data }: MatrixPRSizeVsTTFRProps) => {
 
                         return (
                             <div key={key} className="contents">
-                                <span className="col-span-3">{label}</span>
+                                <span className="col-span-3 text-sm">{label}</span>
                                 {stats.count > 0 ? (
                                     <div className="col-span-9 flex items-center h-full pt-1">
                                         <HorizontalBar
@@ -68,7 +70,7 @@ export const MatrixPRSizeVsTTFR = ({ data }: MatrixPRSizeVsTTFRProps) => {
                                         />
                                     </div>
                                 ) : (
-                                    <span className="text-slate-400 col-span-11">All PRs in this category have no reviews yet</span>
+                                    <span className="text-slate-400 col-span-11 text-sm">All PRs in this category have no reviews yet</span>
                                 )}
                             </div>
                         )
@@ -84,7 +86,7 @@ const HorizontalBar = ({ p50Value, p90Value, max, sizeLabel }: { p50Value: numbe
 
     const Point = ({ value, color }: { value: number, color: string }) => (
         <div className={`
-            h-4 w-4 
+            h-3 w-3 
             absolute top-1/2 -translate-y-1/2 -translate-x-1/2
             rounded-full 
             ${color} border-2 border-slate-300 
@@ -95,7 +97,7 @@ const HorizontalBar = ({ p50Value, p90Value, max, sizeLabel }: { p50Value: numbe
 
     return (
         <div
-            className="h-2 bg-slate-600 hover:bg-slate-500 transition-colors rounded-md relative flex-grow w-full cursor-crosshair"
+            className="h-1 bg-slate-600 hover:bg-slate-500 transition-colors rounded-md relative flex-grow w-full cursor-crosshair"
             onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
             onMouseLeave={() => setMousePos(null)}
         >
@@ -123,11 +125,11 @@ const MetricLegends = () => {
         <div className="flex py-4">
             <div className="flex gap-8">
                 <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full inline-block bg-blue-500 border-2 border-slate-300"></span>
+                    <span className="w-3 h-3 rounded-full inline-block bg-blue-500 border-2 border-slate-300"></span>
                     <span className="text-sm">P50</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full inline-block bg-green-600 border-2 border-slate-300"></span>
+                    <span className="w-3 h-3 rounded-full inline-block bg-green-600 border-2 border-slate-300"></span>
                     <span className="text-sm">P90</span>
                 </div>
             </div>
@@ -138,7 +140,7 @@ const MetricLegends = () => {
 const MetricTooltip = () => {
     return (
         <InfoTooltip>
-            <p className="font-extrabold">
+            <p>
                 Shows the distribution of pull requests based on their size (number of lines added/removed) and the time it took to receive the first review.
             </p>
         </InfoTooltip>

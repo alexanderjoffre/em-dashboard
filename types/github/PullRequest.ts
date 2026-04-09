@@ -1,12 +1,13 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import { Author } from "./Author";
+import { GithubUser } from "./GithubUser";
 import { Comments } from "./Comments";
 import { Commits } from "./Commits";
 import { PullRequestSize } from "./PullResquestSize";
 import { Reviews } from "./Reviews";
 import { GithubStatusCheckState } from "./PullRequestStatusCheckState";
+import { PullRequestUrlVO } from "./PullRequestUrlVO";
 
 dayjs.extend(utc);
 dayjs.extend(isSameOrBefore);
@@ -15,12 +16,14 @@ export class PullRequest {
     private id: string;
     private title: string;
     private state: string;
-    private url: string;
+    private url: PullRequestUrlVO;
     private createdAt: string;
     private updatedAt: string;
     private closedAt: string | null;
     private mergedAt: string | null;
-    private author: Author;
+    private author: GithubUser;
+    private targetBranchName: string;
+    private sourceBranchName: string;
     private additions: number;
     private deletions: number;
     private changedFiles: number;
@@ -41,7 +44,9 @@ export class PullRequest {
         updatedAt: string;
         closedAt: string | null;
         mergedAt: string | null;
-        author: Author;
+        author: GithubUser;
+        targetBranchName: string;
+        sourceBranchName: string;
         additions: number;
         deletions: number;
         changedFiles: number;
@@ -53,12 +58,14 @@ export class PullRequest {
         this.id = data.id;
         this.title = data.title;
         this.state = data.state;
-        this.url = data.url;
+        this.url = new PullRequestUrlVO(data.url);
         this.createdAt = data.createdAt;
         this.updatedAt = data.updatedAt;
         this.closedAt = data.closedAt;
         this.mergedAt = data.mergedAt;
         this.author = data.author;
+        this.targetBranchName = data.targetBranchName;
+        this.sourceBranchName = data.sourceBranchName;
         this.additions = data.additions;
         this.deletions = data.deletions;
         this.changedFiles = data.changedFiles;
@@ -157,7 +164,7 @@ export class PullRequest {
         return this.state;
     }
 
-    public getUrl(): string {
+    public getUrl(): PullRequestUrlVO {
         return this.url;
     }
 
@@ -177,7 +184,7 @@ export class PullRequest {
         return this.mergedAt;
     }
 
-    public getAuthor(): Author {
+    public getAuthor(): GithubUser {
         return this.author;
     }
 
@@ -242,5 +249,21 @@ export class PullRequest {
 
     public hasJiraTicket(): boolean {
         return this.jiraTicket !== null;
+    }
+
+    public isTooLarge(): boolean {
+        return this.getSize() === PullRequestSize.EXTRA_LARGE || this.getSize() === PullRequestSize.LARGE;
+    }
+
+    public hasIssues(): boolean {
+        return this.isBlocked() || this.isTooLarge() || !this.hasJiraTicket() || this.getAge() > 7;
+    }
+
+    public getTargetBranchName(): string {
+        return this.targetBranchName;
+    }
+
+    public getSourceBranchName(): string {
+        return this.sourceBranchName;
     }
 }

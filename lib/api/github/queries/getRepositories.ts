@@ -24,6 +24,9 @@ query GetRepoPRMetrics($owner: String!, $name: String!) {
           avatarUrl
         }
 
+        baseRefName
+        headRefName
+
         additions
         deletions
         changedFiles

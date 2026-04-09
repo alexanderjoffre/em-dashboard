@@ -11,7 +11,7 @@ export const InfoTooltip = ({
             <TooltipTrigger asChild>
                 <Info className="w-4 h-4 hover:text-slate-300 cursor-pointer" />
             </TooltipTrigger>
-            <TooltipContent side="left" className="p-4 max-w-md text-md font-medium grid bg-slate-800 text-slate-300">
+            <TooltipContent side="left" className="p-4 max-w-sm grid bg-slate-800 text-slate-300">
                 {children}
             </TooltipContent>
         </Tooltip>
